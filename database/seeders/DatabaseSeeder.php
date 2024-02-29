@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            OrderSeeder::class,
             RolSeeder::class,
         ]);
     }
