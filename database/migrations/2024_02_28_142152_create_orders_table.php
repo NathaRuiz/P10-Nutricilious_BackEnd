@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->enum('status',['Processing', 'Cancelled', 'Confirmed', 'Shipping', 'Delivered'])->default('Processing');
-            $table->unsignedBigInteger('id_order_detail');
-            $table->foreign('id_order_detail')->references('id')->on('order_details');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->tinyInteger('unit_quantity');
             $table->double('total_price');
             $table->timestamps();
         });

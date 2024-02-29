@@ -39,8 +39,15 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function order_detail()
+    public function order()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Order::class);
     }
+
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class);
+    }
+
 }
