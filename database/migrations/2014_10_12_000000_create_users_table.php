@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('adress');
             $table->string('phone');
             $table->string('password');
+            $table->unsignedBigInteger('rol_id');
+            $table->foreign('rol_id')->references('id')->on('rols');
             $table->rememberToken();
             $table->timestamps();
         });
