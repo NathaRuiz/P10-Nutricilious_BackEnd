@@ -11,4 +11,8 @@ class Rol extends Model
 
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }
