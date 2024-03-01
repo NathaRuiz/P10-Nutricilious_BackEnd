@@ -13,10 +13,6 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        Order::create(["status" => "Processing"]);
-        Order::create(["status" => "Cancelled"]);
-        Order::create(["status" => "Confirmed"]);
-        Order::create(["status" => "Shipping"]);
-        Order::create(["status" => "Delivered"]);
+        Order::factory()->count(6)->create();
     }
 }
