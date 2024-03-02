@@ -20,7 +20,8 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertStatus(200); // Cambiando la aserción a verificar el código de estado 200
+        $response->assertJsonStructure(['token']);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void

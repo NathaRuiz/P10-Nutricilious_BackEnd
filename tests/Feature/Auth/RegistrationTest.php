@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Faker\Factory as Faker;
 
 class RegistrationTest extends TestCase
 {
@@ -11,9 +12,10 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $faker = Faker::create();
         $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
             'adress' => '123 calle',
             'phone' => '12346564',
             'rol_id' => 2,
@@ -22,6 +24,6 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertStatus(201);
     }
 }
