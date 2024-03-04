@@ -62,4 +62,45 @@ class ProductControllerTest extends TestCase
         $response = $this->get("/api/products/{$response->id}");
         $response->assertStatus(200);
     }
+
+    public function test_update_product(): void
+    {
+        $faker = Faker::create();
+        $product = Product::create([
+                'name' => $faker->name,
+                'description' => 'This is a test product.',
+                'stock' => 10,
+                'price' => 19.99,
+                'status' => 'Active',
+                'id_category' => 2,
+        ]);
+        $updateproduct =[
+            'name' => $faker->name,
+            'description' => 'Este es un producto de prueba',
+            'stock' => 8,
+            'price' => 15.50,
+            'status' => 'Inactive',
+            'id_category' => 3,
+    ];
+
+        $response = $this->put("/api/products/{$product->id}",$updateproduct);
+        $response->assertStatus(200);
+    }
+
+    public function test_destroy_an_existing_product(): void
+    {
+        $faker = Faker::create();
+        $response = Product::create([
+                'name' => $faker->name,
+                'description' => 'This is a test product.',
+                'stock' => 10,
+                'price' => 19.99,
+                'status' => 'Active',
+                'id_category' => 2,
+        ]);
+
+        $response = $this->delete("/api/products/{$response->id}");
+        $response->assertStatus(200);
+    }
+
 }
