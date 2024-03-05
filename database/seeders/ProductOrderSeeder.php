@@ -1,18 +1,18 @@
 <?php
 
 namespace Database\Seeders;
-use App\Models\Order;
+use App\Models\Product_Order;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class OrderSeeder extends Seeder
+class ProductOrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Order::factory()->count(10)->create();
+        Product_Order::factory()->count(10)->create();
     }
 }
