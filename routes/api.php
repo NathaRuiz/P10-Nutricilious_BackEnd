@@ -29,21 +29,21 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
 
-Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-    ->middleware('guest')
-    ->name('password.email');
+// Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+//     ->middleware('guest')
+//     ->name('password.email');
 
-Route::post('/reset-password', [NewPasswordController::class, 'store'])
-    ->middleware('guest')
-    ->name('password.store');
+// Route::post('/reset-password', [NewPasswordController::class, 'store'])
+//     ->middleware('guest')
+//     ->name('password.store');
 
-Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware(['auth', 'signed', 'throttle:6,1'])
-    ->name('verification.verify');
+// Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+//     ->middleware(['auth', 'signed', 'throttle:6,1'])
+//     ->name('verification.verify');
 
-Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
+// Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+//     ->middleware(['auth', 'throttle:6,1'])
+//     ->name('verification.send');
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -53,7 +53,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
-Route::middleware('company:3')->group(function () {
+Route::middleware('company')->group(function () {
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::post('/products', [ProductController::class, 'store']);
@@ -61,12 +61,3 @@ Route::middleware('company:3')->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
 
-// Route::middleware('admin')->group(function () {
-//     Route::get('/products', [ProductController::class, 'index']);
-//     Route::post('/products', [ProductController::class, 'store']);
-// });
-
-// Route::middleware('user')->group(function () {
-//     Route::get('/products', [ProductController::class, 'index']);
-//     Route::post('/products', [ProductController::class, 'store']);
-// });
