@@ -9,7 +9,7 @@ class Product_Order extends Model
 {
     use HasFactory;
 
-
+    protected $table = 'products_order';
     protected $guarded =  [];
 
     public function product()
