@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+use App\Models\Category;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,7 @@ class ProductFactory extends Factory
             'stock' => $this->faker->randomNumber(1, 50),
             'price' => $this->faker->randomFloat(2, 1, 100),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
-            'id_category' => $this->faker->randomNumber(1, 5),
+            'id_category' => Category::all()->random()->id,
         ];
     }
 }
