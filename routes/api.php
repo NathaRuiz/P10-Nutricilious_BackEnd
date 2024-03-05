@@ -49,8 +49,24 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{id}', [ProductController::class, 'show']);
-Route::post('/products', [ProductController::class, 'store']);
-Route::put('/products/{id}', [ProductController::class, 'update']);
-Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+// Route::get('/', [HomeController::class, 'index']);
+Route::post('/register', [RegisteredUserController::class, 'store']);
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+
+Route::middleware('company:3')->group(function () {
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+});
+
+// Route::middleware('admin')->group(function () {
+//     Route::get('/products', [ProductController::class, 'index']);
+//     Route::post('/products', [ProductController::class, 'store']);
+// });
+
+// Route::middleware('user')->group(function () {
+//     Route::get('/products', [ProductController::class, 'index']);
+//     Route::post('/products', [ProductController::class, 'store']);
+// });
