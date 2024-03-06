@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
+
 
 class CompanyProductsController extends Controller
 {
@@ -18,13 +20,6 @@ class CompanyProductsController extends Controller
          return response()->json($products);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -37,17 +32,16 @@ class CompanyProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, $id)
     {
-        //
-    }
+        $user = $request->user();
+        $product = Product::where('id', $id)->where('id_userCompany', $user->id)->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        if (!$product) {
+            return response()->json(['message' => 'Producto no encontrado o no autorizado'], 404);
+        }
+
+        return response()->json($product);
     }
 
     /**
