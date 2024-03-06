@@ -11,15 +11,8 @@ class CompanyProductsController extends Controller
      */
     public function index(Request $request)
     {
-        // $user = $request->user();
-        // $products = $user->products;
-        // //traer productos y al producto le debemos decir que traiga el id del usuario company solicitado
-        // return response()->json($products);
-
-         // Obtén el usuario autenticado
+    
          $user = $request->user();
-
-         // Obtén todos los productos asociados a este usuario
          $products = $user->products;
  
          return response()->json($products);
