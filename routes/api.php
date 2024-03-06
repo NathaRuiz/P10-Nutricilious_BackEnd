@@ -8,7 +8,8 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AdminProductsController;
+use App\Http\Controllers\CompanyProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,23 +62,23 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 //     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 // });
 
-Route::middleware(['auth:sanctum', 'Company'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::post('/products', [ProductController::class, 'store']);
-    Route::put('/products/{id}', [ProductController::class, 'update']);
-    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'Admin'])->group(function () {
+    Route::get('/products', [AdminProductsController::class, 'index']);
+    Route::get('/products/{id}', [AdminProductsController::class, 'show']);
+    Route::post('/products', [AdminProductsController::class, 'store']);
+    Route::put('/products/{id}', [AdminProductsController::class, 'update']);
+    Route::delete('/products/{id}', [AdminProductsController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', 'User'])->group(function () {
    
 });
 
-Route::middleware(['auth:sanctum', 'Admin'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::post('/products', [ProductController::class, 'store']);
-    Route::put('/products/{id}', [ProductController::class, 'update']);
-    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+Route::middleware(['auth:sanctum', 'Company'])->group(function () {
+    Route::get('/company/products', [CompanyProductsController::class, 'index']);
+    Route::get('/company/products/{id}', [CompanyProductsController::class, 'show']);
+    Route::post('/company/products', [CompanyProductsController::class, 'store']);
+    Route::put('/company/products/{id}', [CompanyProductsController::class, 'update']);
+    Route::delete('/company/products/{id}', [CompanyProductsController::class, 'destroy']);
 });
 

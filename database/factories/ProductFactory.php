@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 use App\Models\Category;
-
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +18,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_userCompany' => User::where('rol_id', 3)->get()->random()->id,
             'name' => $this->faker->name,
             'description' => $this->faker->name,
             'stock' => $this->faker->randomNumber(1, 50),

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_userCompany');
+            $table->foreign('id_userCompany')->references('id')->on('users')->where('rol_id', '=', 3);;
             $table->string('name');
             $table->text('description');
             $table->tinyInteger('stock')->unsigned();

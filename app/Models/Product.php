@@ -19,4 +19,10 @@ class Product extends Model
     public function product_order(){
         return $this->hasMany(Product_Order::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_userCompany');
+    }
+
 };
