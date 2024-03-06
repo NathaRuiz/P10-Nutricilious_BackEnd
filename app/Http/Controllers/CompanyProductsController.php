@@ -26,7 +26,23 @@ class CompanyProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'stock' => 'required|integer',
+            'price' => 'required|numeric',
+            'status' => 'required|in:Active,Inactive',
+            'id_category' => 'required|exists:categories,id',
+        ]);
+    
+        $product = new Product($request->all());
+        $product->id_userCompany = $user->id;
+        $product->save();
+    
+        return response()->json($product, 201);
+    
     }
 
     /**
