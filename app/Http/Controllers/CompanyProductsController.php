@@ -63,16 +63,42 @@ class CompanyProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,  $id)
     {
-        //
+        $user = $request->user();
+        $product = Product::where('id', $id)->where('id_userCompany', $user->id)->first();
+
+        if (!$product) {
+            return response()->json(['message' => 'Producto no encontrado o no autorizado'], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'stock' => 'required|integer',
+            'price' => 'required|numeric',
+            'status' => 'required|in:Active,Inactive',
+            'id_category' => 'required|exists:categories,id',
+        ]);
+
+        $product->update($request->all());
+
+        return response()->json(['message' => 'Producto actualizado correctamente'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $user = $request->user();
+        $product = Product::where('id', $id)->where('id_userCompany', $user->id)->first();
+
+        if (!$product) {
+            return response()->json(['message' => 'Producto no encontrado o no autorizado'], 404);
+        }
+        $product->delete();
+
+        return response()->json(['message' => 'Producto eliminado correctamente'], 200);
     }
 }
