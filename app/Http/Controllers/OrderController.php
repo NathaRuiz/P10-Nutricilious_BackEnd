@@ -105,45 +105,49 @@ public function updateCart(Request $request)
     $user = auth()->user();
 
     // Buscar um carrinho ativo para o usuário
-    $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+    $cart = Order::where('user_id', $user->id)
+                 ->where('status', 'Processing')
+                 ->first();
 
     if (!$cart) {
         return response()->json(['message' => 'Cart not found'], 404);
     }
 
     // Verificar se os dados necessários estão presentes na solicitação
-    if ($request->has(['product_id', 'product_quantity'])) {
-        $productId = $request->input('product_id');
+    if ($request->has(['id_product', 'product_quantity'])) {
+        $productId = $request->input('id_product');
         $newQuantity = $request->input('product_quantity');
 
         // Buscar o produto no carrinho
-        $productOrder = $cart->product_orders()->where('product_id', $productId)->first(); // Assumindo que a relação entre Order e ProductOrder é product_orders()
+        $productOrder = $cart->products()->where('id_product', $productId)->first();
 
         if (!$productOrder) {
             return response()->json(['message' => 'Product not found in cart'], 404);
         }
 
         // Atualizar a quantidade do produto no carrinho
-        $productOrder->quantity = $newQuantity;
-        // Recalcular o preço total para este produto, assumindo que você tenha um preço unitário armazenado em algum lugar
-        $productOrder->total_price = $newQuantity * $productOrder->unit_price; // Certifique-se de que unit_price está disponível
-        $productOrder->save();
+        $productOrder->pivot->product_quantity = $newQuantity;
+        // Recalcular o preço total para este produto
+        $productOrder->pivot->total_price = $newQuantity * $productOrder->price; // Assumindo que há um campo 'price' na tabela products
+        $productOrder->pivot->save();
 
+        // Atualizar a quantidade total no pedido
+        $cart->unit_quantity = $cart->products->sum('pivot.product_quantity');
         // Recalcular o preço total do carrinho
-        $totalPrice = $cart->product_orders()->sum('total_price');
-        $cart->total_price = $totalPrice;
+        $cart->total_price = $cart->products->sum(function ($product) {
+            return $product->pivot->product_quantity * $product->price;
+        });
         $cart->save();
 
         // Retornar o produto atualizado e o total do carrinho
         return response()->json([
             'product' => $productOrder,
-            'cart_total_price' => $totalPrice,
+            'cart_total_price' => $cart->total_price,
             'message' => 'Cart updated successfully'
         ]);
     } else {
         return response()->json(['error' => 'Missing data for cart update'], 400);
     }
 }
-
 
 }
