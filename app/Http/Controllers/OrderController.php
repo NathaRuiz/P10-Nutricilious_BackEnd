@@ -54,23 +54,33 @@ class OrderController extends Controller
 
 public function viewCart()
 {
-   // Obtén el usuario autenticado
-   $user = auth()->user();
+    // Obtén el usuario autenticado
+    $user = auth()->user();
 
-   // Busca un carrito activo para el usuario
-   $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+    // Busca un carrito activo para el usuario
+    $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
 
-   if ($cart) {
-       // Recupera solo los nombres de los productos en el carrito
-       $productNames = Product_Order::where('order_id', $cart->id)
-           ->with('product:id,name') // Indicar solo las columnas 'id' y 'name'
-           ->get(['id_product', 'product_quantity']); // Seleccionar solo las columnas necesarias
+    if ($cart) {
+        // Recupera los productos en el carrito con sus nombres
+        $productNames = Product_Order::where('order_id', $cart->id)
+            ->with(['product:id,name'])
+            ->get(['id_product', 'product_quantity']);
 
-       return response()->json(['order' => $cart, 'productNames' => $productNames]);
-   }
+        // Transforma la colección para mostrar solo el campo "name"
+        $productNames->transform(function ($item) {
+            return [
+                'id_product' => $item->id_product,
+                'product_quantity' => $item->product_quantity,
+                'product' => $item->product->name,
+            ];
+        });
 
-   return response()->json(['message' => 'Carrito esta vacio']);
+        return response()->json(['order' => $cart, 'productNames' => $productNames]);
+    }
+
+    return response()->json(['message' => 'Carrito está vacío']);
 }
+
 
 
 public function updateCart(Request $request)
