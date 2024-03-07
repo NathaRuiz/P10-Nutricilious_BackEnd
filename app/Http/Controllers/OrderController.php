@@ -73,28 +73,73 @@ public function viewCart()
 }
 
 
+// public function updateCart(Request $request)
+// {
+//     $user = auth()->user();
+
+//     // Buscar un carrito activo para el usuario
+//     $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+
+//     // Si no hay un carrito activo, puedes manejar esto según tus requisitos (crear uno nuevo o devolver un mensaje)
+//     if (!$cart) {
+//         return response()->json(['message' => 'Cart not found'], 404);
+//     }
+
+//     // Verificar si los datos necesarios están presentes en la solicitud
+//     if ($request->has('product_quantity')) {
+//         // Actualizar el carrito
+//         $cart->update([
+//             'product_quantity' => $request->input('product_quantity'),
+//             // Calcular automáticamente el total_price basado en la nueva unit_quantity
+//             'total_price' => $cart->product_order()->sum('total_price'), // asumiendo que existe la relación productOrders
+//         ]);
+
+//         return response()->json(['message' => 'Cart updated successfully']);
+//     } else {
+//         return response()->json(['error' => 'Missing data for cart update'], 400);
+//     }
+// }
+
 public function updateCart(Request $request)
 {
     $user = auth()->user();
 
-    // Buscar un carrito activo para el usuario
+    // Buscar um carrinho ativo para o usuário
     $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
 
-    // Si no hay un carrito activo, puedes manejar esto según tus requisitos (crear uno nuevo o devolver un mensaje)
     if (!$cart) {
         return response()->json(['message' => 'Cart not found'], 404);
     }
 
-    // Verificar si los datos necesarios están presentes en la solicitud
-    if ($request->has('product_quantity')) {
-        // Actualizar el carrito
-        $cart->update([
-            'product_quantity' => $request->input('product_quantity'),
-            // Calcular automáticamente el total_price basado en la nueva unit_quantity
-            'total_price' => $cart->product_order()->sum('total_price'), // asumiendo que existe la relación productOrders
-        ]);
+    // Verificar se os dados necessários estão presentes na solicitação
+    if ($request->has(['product_id', 'product_quantity'])) {
+        $productId = $request->input('product_id');
+        $newQuantity = $request->input('product_quantity');
 
-        return response()->json(['message' => 'Cart updated successfully']);
+        // Buscar o produto no carrinho
+        $productOrder = $cart->product_orders()->where('product_id', $productId)->first(); // Assumindo que a relação entre Order e ProductOrder é product_orders()
+
+        if (!$productOrder) {
+            return response()->json(['message' => 'Product not found in cart'], 404);
+        }
+
+        // Atualizar a quantidade do produto no carrinho
+        $productOrder->quantity = $newQuantity;
+        // Recalcular o preço total para este produto, assumindo que você tenha um preço unitário armazenado em algum lugar
+        $productOrder->total_price = $newQuantity * $productOrder->unit_price; // Certifique-se de que unit_price está disponível
+        $productOrder->save();
+
+        // Recalcular o preço total do carrinho
+        $totalPrice = $cart->product_orders()->sum('total_price');
+        $cart->total_price = $totalPrice;
+        $cart->save();
+
+        // Retornar o produto atualizado e o total do carrinho
+        return response()->json([
+            'product' => $productOrder,
+            'cart_total_price' => $totalPrice,
+            'message' => 'Cart updated successfully'
+        ]);
     } else {
         return response()->json(['error' => 'Missing data for cart update'], 400);
     }
@@ -102,7 +147,3 @@ public function updateCart(Request $request)
 
 
 }
-
-
-
-
