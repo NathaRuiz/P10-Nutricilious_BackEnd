@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Product_Order;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -82,8 +83,6 @@ public function viewCart()
 }
 
 
-
-
 public function updateCart(Request $request)
 {
     $user = auth()->user();
@@ -118,7 +117,63 @@ public function updateCart(Request $request)
     }
 }
 
+public function clearCart()
+{
+    $user = auth()->user();
 
+    // Buscar un carrito activo para el usuario
+    $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+
+    if ($cart) {
+        // Eliminar todos los productos asociados al carrito
+        $cart->product_order()->delete();
+
+        // Actualizar la información del carrito
+        $cart->update([
+            'unit_quantity' => 0,
+            'total_price' => 0,
+        ]);
+
+        return response()->json(['message' => 'Cart cleared successfully']);
+    }
+
+    return response()->json(['message' => 'Cart is empty']);
+}
+
+// OrderController.php
+public function removeProductFromCart(Request $request)
+{
+    $user = auth()->user();
+
+    // Buscar un carrito activo para el usuario
+    $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+
+    // Si no hay un carrito activo, puedes manejar esto según tus requisitos (crear uno nuevo o devolver un mensaje)
+    if (!$cart) {
+        return response()->json(['message' => 'Cart not found'], 404);
+    }
+
+    // Obtener el ID del producto desde el cuerpo de la solicitud
+    $id_product = $request->input('id_product');
+
+    // Utilizar una consulta SQL directa para eliminar el producto del carrito
+    $deleted = DB::table('products_order')
+        ->where('order_id', $cart->id)
+        ->where('id_product', $id_product)
+        ->delete();
+
+    if ($deleted) {
+        // Actualizar la cantidad total y el total_price del carrito
+        $cart->update([
+            'unit_quantity' => $cart->product_order()->sum('product_quantity'),
+            'total_price' => $cart->product_order()->sum('total_price'),
+        ]);
+
+        return response()->json(['message' => 'Product removed from cart successfully']);
+    } else {
+        return response()->json(['error' => 'Product not found in the cart'], 404);
+    }
+}
 }
 
 
