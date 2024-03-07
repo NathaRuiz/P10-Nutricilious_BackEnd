@@ -182,6 +182,8 @@ public function removeProductFromCart(Request $request)
 
 public function purchase()
 {
+    $user = auth()->user();
+
     $twilioAccountSid = env('TWILIO_ACCOUNT_SID');
     $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
     $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
@@ -193,7 +195,7 @@ public function purchase()
       ->create("whatsapp:".$twilioUserPhoneNumber, // to
         array(
           "from" => "whatsapp:".$twilioPhoneNumber,
-          "body" => "¡Gracias por tu compra en nuestra tienda Nutrilicious! Tu pedido se ha procesado con éxito. "
+          "body" => $user->name." ¡Gracias por tu compra en Nutrilicious! Tu pedido se ha procesado con éxito."
         )
       );
 
