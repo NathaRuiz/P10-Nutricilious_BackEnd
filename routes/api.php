@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminProductsController;
 use App\Http\Controllers\CompanyProductsController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,11 +72,11 @@ Route::middleware(['auth:sanctum', 'Admin'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'User'])->group(function () {
-    Route::post('/cart/add', [OrderController::class, 'addToCart']);
-    Route::get('/cart/view', [OrderController::class, 'viewCart']);
-    Route::put('/cart/update', [OrderController::class, 'updateCart']);
-    Route::delete('/cart/delete', [OrderController::class, 'clearCart']);
-    Route::delete('/cart/delete-item', [OrderController::class, 'removeProductFromCart']);
+    Route::post('/cart/add', [UserProductsController::class, 'addToCart']);
+    Route::get('/cart/view', [UserProductsController::class, 'viewCart']);
+    Route::put('/cart/update', [UserProductsController::class, 'updateCart']);
+    Route::delete('/cart/delete', [UserProductsController::class, 'clearCart']);
+    Route::delete('/cart/delete-item', [UserProductsController::class, 'removeProductFromCart']);
 });
 
 Route::middleware(['auth:sanctum', 'Company'])->group(function () {

@@ -8,7 +8,7 @@ use App\Models\Product;
 use App\Models\Product_Order;
 use Illuminate\Support\Facades\DB;
 
-class OrderController extends Controller
+class UserProductsController extends Controller
 {
     public function addToCart(Request $request)
 {
