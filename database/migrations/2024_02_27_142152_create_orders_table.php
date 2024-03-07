@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('status',['Processing', 'Cancelled', 'Confirmed', 'Shipping', 'Delivered'])->default('Processing');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->tinyInteger('unit_quantity');
+            $table->integer('unit_quantity')->default(0);
             $table->double('total_price');
             $table->timestamps();
         });

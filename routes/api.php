@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminProductsController;
 use App\Http\Controllers\CompanyProductsController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,10 @@ Route::middleware(['auth:sanctum', 'Admin'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'User'])->group(function () {
-   
+    Route::post('/cart/add', [OrderController::class, 'addToCart']);
+    Route::get('/cart/view', [OrderController::class, 'viewCart']);
+    Route::put('/cart/update', [OrderController::class, 'updateCart']);
+
 });
 
 Route::middleware(['auth:sanctum', 'Company'])->group(function () {
