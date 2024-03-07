@@ -83,6 +83,7 @@ public function viewCart()
 
 
 
+
 public function updateCart(Request $request)
 {
     $user = auth()->user();
@@ -96,12 +97,19 @@ public function updateCart(Request $request)
     }
 
     // Verificar si los datos necesarios están presentes en la solicitud
-    if ($request->has('product_quantity')) {
-        // Actualizar el carrito
-        $cart->update([
+    if ($request->has('id_product') && $request->has('product_quantity')) {
+        // Obtener el precio del producto
+        $productPrice = Product::find($request->input('id_product'))->price;
+
+        // Actualizar el carrito usando la relación product_order
+        $cart->product_order()->where('id_product', $request->input('id_product'))->update([
             'product_quantity' => $request->input('product_quantity'),
-            // Calcular automáticamente el total_price basado en la nueva unit_quantity
-            'total_price' => $cart->product_order()->sum('total_price'), // asumiendo que existe la relación productOrders
+            'total_price' => $productPrice * $request->input('product_quantity'),
+        ]);
+
+        // Recalcula el total_price basado en la nueva unit_quantity
+        $cart->update([
+            'total_price' => $cart->product_order()->sum('total_price'),
         ]);
 
         return response()->json(['message' => 'Cart updated successfully']);

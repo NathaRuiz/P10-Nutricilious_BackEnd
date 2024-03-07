@@ -10,6 +10,8 @@ class Product_Order extends Model
     use HasFactory;
 
     protected $table = 'products_order';
+    protected $primaryKey = ['order_id', 'id_product'];
+    public $incrementing = false;
     protected $guarded =  [];
 
     public function product()
