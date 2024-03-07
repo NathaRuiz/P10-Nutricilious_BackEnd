@@ -226,14 +226,15 @@ public function purchase(Request $request)
     // }
 
 
-    $sid    = "AC3ecef099b3fe57dc61570f875b32685b";
-    $token  = "0d8ca61c438ac39163d8ebb077d751e3";
-    $twilio = new Client($sid, $token);
+    $twilioAccountSid = env('TWILIO_ACCOUNT_SID');
+    $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
+    $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+    $twilio = new Client($twilioAccountSid, $twilioAuthToken);
 
     $message = $twilio->messages
-      ->create("whatsapp:+34624973903", // to
+      ->create("whatsapp:".$twilioPhoneNumber, // to
         array(
-          "from" => "whatsapp:+14155238886",
+          "from" => "whatsapp:".$twilioPhoneNumber,
           "body" => "¡Gracias por tu compra en nuestra tienda Nutrilicious! Tu pedido se ha procesado con éxito. "
         )
       );
