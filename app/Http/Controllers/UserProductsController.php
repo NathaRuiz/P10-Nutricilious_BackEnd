@@ -1,12 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
+
+require_once base_path('vendor/autoload.php');
 
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Product_Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client;
+
+
 
 class UserProductsController extends Controller
 {
@@ -173,6 +178,67 @@ public function removeProductFromCart(Request $request)
     } else {
         return response()->json(['error' => 'Producto no encontrado en el carrito'], 404);
     }
+}
+
+public function purchase(Request $request)
+{
+    // // Obtener los productos en el carrito del usuario
+    // $user = auth()->user();
+    // $cart = Order::where('user_id', $user->id)->where('status', 'Processing')->first();
+
+    // if (!$cart) {
+    //     return response()->json(['error' => 'Cart not found'], 404);
+    // }
+
+    // // Aquí colocas la lógica específica para procesar la compra
+    // // Por ejemplo, actualizar el estado del pedido, procesar el pago, etc.
+    // // ...
+
+    // // Después de procesar la compra, puedes notificar al usuario a través de WhatsApp
+
+    // // Información de Twilio
+    // $twilioAccountSid = 'AC3ecef099b3fe57dc61570f875b32685b';
+    // $twilioAuthToken = '0d8ca61c438ac39163d8ebb077d751e3';
+    // $twilioPhoneNumber = '+14155238886';
+
+    // // Número de teléfono del usuario
+    // $phoneNumber = $user->phone_number;
+
+    // // Mensaje para enviar por WhatsApp
+    // $message = "¡Gracias por tu compra en nuestra tienda! Tu pedido se ha procesado con éxito.";
+
+    // // Enviar el mensaje a través de Twilio
+    // try {
+    //     $twilio = new Client($twilioAccountSid, $twilioAuthToken);
+    //     $twilio->messages->create(
+    //         "whatsapp:" . $phoneNumber,
+    //         [
+    //             "from" => "whatsapp:" . $twilioPhoneNumber,
+    //             "body" => $message,
+    //         ]
+    //     );
+
+    //     // Éxito
+    //     return response()->json(['message' => 'Compra realizada con éxito y notificación enviada por WhatsApp']);
+    // } catch (\Exception $e) {
+    //     // Error al enviar la notificación por WhatsApp
+    //     return response()->json(['error' => 'Error al enviar la notificación por WhatsApp'], 500);
+    // }
+
+
+    $sid    = "AC3ecef099b3fe57dc61570f875b32685b";
+    $token  = "0d8ca61c438ac39163d8ebb077d751e3";
+    $twilio = new Client($sid, $token);
+
+    $message = $twilio->messages
+      ->create("whatsapp:+34624973903", // to
+        array(
+          "from" => "whatsapp:+14155238886",
+          "body" => "¡Gracias por tu compra en nuestra tienda Nutrilicious! Tu pedido se ha procesado con éxito. "
+        )
+      );
+
+print($message->sid);
 }
 }
 
