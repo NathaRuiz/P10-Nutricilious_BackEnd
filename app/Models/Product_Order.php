@@ -10,15 +10,17 @@ class Product_Order extends Model
     use HasFactory;
 
     protected $table = 'products_order';
+    protected $primaryKey = ['order_id', 'id_product'];
+    public $incrementing = false;
     protected $guarded =  [];
 
     public function product()
-{
-    return $this->belongsTo(Product::class);
-}
+    {
+        return $this->belongsTo(Product::class, 'id_product');
+    }
 
-public function order()
-{
-    return $this->belongsTo(Order::class);
-}
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
 }

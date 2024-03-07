@@ -50,4 +50,8 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class);
     }
 
+    public function products(){
+        return $this->hasMany(Product::class, 'id_userCompany');
+    }
+
 }
