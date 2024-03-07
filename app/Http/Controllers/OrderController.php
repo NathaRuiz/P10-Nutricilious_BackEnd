@@ -111,9 +111,9 @@ public function updateCart(Request $request)
             'total_price' => $cart->product_order()->sum('total_price'),
         ]);
 
-        return response()->json(['message' => 'Cart updated successfully']);
+        return response()->json(['message' => 'El carrito se ha actualizado con éxito']);
     } else {
-        return response()->json(['error' => 'Missing data for cart update'], 400);
+        return response()->json(['error' => 'No se encuentran datos en el carrito'], 400);
     }
 }
 
@@ -134,10 +134,10 @@ public function clearCart()
             'total_price' => 0,
         ]);
 
-        return response()->json(['message' => 'Cart cleared successfully']);
+        return response()->json(['message' => 'El carrito se ha limpiado satisfactoriamente']);
     }
 
-    return response()->json(['message' => 'Cart is empty']);
+    return response()->json(['message' => 'El carrito está vacio']);
 }
 
 // OrderController.php
@@ -150,7 +150,7 @@ public function removeProductFromCart(Request $request)
 
     // Si no hay un carrito activo, puedes manejar esto según tus requisitos (crear uno nuevo o devolver un mensaje)
     if (!$cart) {
-        return response()->json(['message' => 'Cart not found'], 404);
+        return response()->json(['message' => 'No se encuentra el carrito'], 404);
     }
 
     // Obtener el ID del producto desde el cuerpo de la solicitud
@@ -169,9 +169,9 @@ public function removeProductFromCart(Request $request)
             'total_price' => $cart->product_order()->sum('total_price'),
         ]);
 
-        return response()->json(['message' => 'Product removed from cart successfully']);
+        return response()->json(['message' => 'El producto se ha eliminado del carrito con éxito']);
     } else {
-        return response()->json(['error' => 'Product not found in the cart'], 404);
+        return response()->json(['error' => 'Producto no encontrado en el carrito'], 404);
     }
 }
 }
