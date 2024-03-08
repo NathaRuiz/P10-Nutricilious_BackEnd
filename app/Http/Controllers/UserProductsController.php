@@ -1,12 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
+
+require_once base_path('vendor/autoload.php');
 
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Product_Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Twilio\Rest\Client;
+
+
 
 class UserProductsController extends Controller
 {
@@ -173,6 +178,28 @@ public function removeProductFromCart(Request $request)
     } else {
         return response()->json(['error' => 'Producto no encontrado en el carrito'], 404);
     }
+}
+
+public function purchase()
+{
+    $user = auth()->user();
+
+    $twilioAccountSid = env('TWILIO_ACCOUNT_SID');
+    $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
+    $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+    $twilioUserPhoneNumber = env('TWILIO_USER_PHONE_NUMBER');
+    
+    $twilio = new Client($twilioAccountSid, $twilioAuthToken);
+
+    $message = $twilio->messages
+      ->create("whatsapp:".$twilioUserPhoneNumber, // to
+        array(
+          "from" => "whatsapp:".$twilioPhoneNumber,
+          "body" => $user->name." ¡Gracias por tu compra en Nutrilicious! Tu pedido se ha procesado con éxito."
+        )
+      );
+
+print($message->sid);
 }
 }
 

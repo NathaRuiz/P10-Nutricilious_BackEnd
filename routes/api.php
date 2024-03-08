@@ -77,6 +77,7 @@ Route::middleware(['auth:sanctum', 'User'])->group(function () {
     Route::put('/cart/update', [UserProductsController::class, 'updateCart']);
     Route::delete('/cart/delete', [UserProductsController::class, 'clearCart']);
     Route::delete('/cart/delete-item', [UserProductsController::class, 'removeProductFromCart']);
+    Route::post('/cart/purchase', [UserProductsController::class, 'purchase']);
 });
 
 Route::middleware(['auth:sanctum', 'Company'])->group(function () {
