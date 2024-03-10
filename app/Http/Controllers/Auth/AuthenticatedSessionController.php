@@ -38,16 +38,16 @@ class AuthenticatedSessionController extends Controller
                     return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);
             }
         } catch (\Exception $e) {
-            Log::error('Error durante la autenticacion: ' . $e->getMessage());
-            return response()->json(['message' => 'Error durante la autenticacion'], 500);
+            Log::error('Error durante el inicio de sesión: ' . $e->getMessage());
+            return response()->json(['message' => 'Correo electrónico o contraseña incorrectos. Por favor, verifica tus credenciales.'], 401);
         }
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request)
-    {
+        public function destroy(Request $request)
+        {
         try {
             if ($request->user()) {
                 $request->user()->tokens()->delete();

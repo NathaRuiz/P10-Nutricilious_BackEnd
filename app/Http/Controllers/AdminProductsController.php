@@ -27,6 +27,13 @@ class AdminProductsController extends Controller
         return response()->json($product);
     }
 
+    public function productsByCategory($id_category)
+    {
+        $products = Product::where('id_category', $id_category)->get();
+
+        return response()->json($products);
+    }
+
     public function showCategories()
     {
         $categories = Category::all();
