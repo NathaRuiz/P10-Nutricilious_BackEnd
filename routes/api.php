@@ -18,13 +18,18 @@ use App\Http\Controllers\UserProductsController;
 |
 */
 
+
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest')
-    ->name('login');
+->middleware('guest')
+->name('login');
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
-    ->middleware('guest')
-    ->name('register');
+->middleware('guest')
+->name('register');
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth:sanctum')
+    ->name('logout');
 
 Route::get('/', [AdminProductsController::class, 'showCategories']);
 Route::get('/products/category/{id}', [AdminProductsController::class, 'productsByCategory']);

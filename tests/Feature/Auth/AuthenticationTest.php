@@ -20,7 +20,7 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertStatus(200); // Cambiando la aserción a verificar el código de estado 200
+        $response->assertStatus(200);
         $response->assertJsonStructure(['token']);
     }
 
@@ -36,13 +36,15 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    // public function test_users_can_logout(): void
-    // {
-    //     $user = User::factory()->create();
+    public function test_users_can_logout(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
 
-    //     $response = $this->actingAs($user)->post('/logout');
+        $response = $this->postJson(route('logout'));
 
-    //     $this->assertGuest();
-    //     $response->assertNoContent();
-    // }
+        $response->assertStatus(200);
+
+        $this->assertGuest();
+    }
 }

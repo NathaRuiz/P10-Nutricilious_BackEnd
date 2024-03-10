@@ -19,43 +19,46 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): JsonResponse
     {
         try {
-        $request->authenticate();
+            $request->authenticate();
 
-        $user = $request->user();
-        $token = $user->createToken('token-name')->plainTextToken;
+            $user = $request->user();
+            $token = $user->createToken('token-name')->plainTextToken;
 
-        switch ($user->rol->name) {
-            case 'Admin':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Admin']);
-                break;
-            case 'User':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'User']);
-                break;
-            case 'Company':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Company']);
-                break;
-            default:
-            return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);
+            switch ($user->rol->name) {
+                case 'Admin':
+                    return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Admin']);
+                    break;
+                case 'User':
+                    return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'User']);
+                    break;
+                case 'Company':
+                    return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Company']);
+                    break;
+                default:
+                    return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error durante el inicio de sesión: ' . $e->getMessage());
+            return response()->json(['message' => 'Correo electrónico o contraseña incorrectos. Por favor, verifica tus credenciales.'], 401);
         }
-    } catch (\Exception $e) {
-        Log::error('Error durante el inicio de sesión: ' . $e->getMessage());
-
-        // Puedes regresar una respuesta más específica para indicar un error de inicio de sesión
-        return response()->json(['message' => 'Correo electrónico o contraseña incorrectos. Por favor, verifica tus credenciales.'], 401);
-    }
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request)
-    {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/')->with('message', 'Cierre de sesión exitoso');
+        public function destroy(Request $request)
+        {
+        try {
+            if ($request->user()) {
+                $request->user()->tokens()->delete();
+                Auth::guard('web')->logout();
+                return response()->json(['message' => 'Cierre de sesión exitoso']);
+            } else {
+                return response()->json(['message' => 'Usuario no autenticado'], 401);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error durante el logout: ' . $e->getMessage());
+            return response()->json(['message' => 'Error durante el logout'], 500);
+        }
     }
 }

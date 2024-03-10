@@ -13,10 +13,8 @@ class ProductControllerTest extends TestCase
 {
     public function test_products_table_is_created()
     {
-        // Ejecuta la migración
         $this->artisan('migrate');
 
-        // Asegura que la tabla 'resources' exista en la base de datos
         $this->assertTrue(Schema::hasTable('products'));
     }
 
@@ -43,32 +41,32 @@ class ProductControllerTest extends TestCase
 
     public function test_show_products(): void
     {
-        $user = User::firstOrCreate(['rol_id' => 1]);
-        $this->actingAs($user);
+        $companyUser = User::factory()->create(['rol_id' => 3]);
 
-        $response = $this->get('api/admin/products');
+        $this->actingAs($companyUser);
 
+        $response = $this->get('api/company/products');
+        
         $response->assertStatus(200);
     }
 
 
     public function test_show_one_product(): void
     {
-        $user = User::firstOrCreate(['rol_id' => 1]);
-        $this->actingAs($user);
+        $faker = \Faker\Factory::create();
 
-        $faker = Faker::create();
-        $response = Product::create([
+        $product = Product::create([
             'name' => $faker->name,
             'description' => 'This is a test product.',
             'stock' => 10,
             'price' => 19.99,
             'status' => 'Active',
             'id_category' => 2,
-            'id_userCompany' => $user->id,
+            'id_userCompany' => 2,
         ]);
 
-        $response = $this->get("/api/admin/products/{$response->id}");
+        $response = $this->get("api/products/{$product->id}");
+
         $response->assertStatus(200);
     }
 
