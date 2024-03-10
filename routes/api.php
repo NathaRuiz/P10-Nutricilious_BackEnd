@@ -27,7 +27,7 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
     ->name('register');
 
 Route::get('/', [AdminProductsController::class, 'showCategories']);
-Route::get('/products', [AdminProductsController::class, 'index']);
+Route::get('/products/category/{id}', [AdminProductsController::class, 'productsByCategory']);
 Route::get('/products/{id}', [AdminProductsController::class, 'show']);
 
 Route::middleware(['auth:sanctum', 'Admin'])->group(function () {
