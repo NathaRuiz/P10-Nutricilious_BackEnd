@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
 class AuthenticatedSessionController extends Controller
@@ -17,6 +18,7 @@ class AuthenticatedSessionController extends Controller
 
     public function store(LoginRequest $request): JsonResponse
     {
+        try {
         $request->authenticate();
 
         $user = $request->user();
@@ -35,6 +37,13 @@ class AuthenticatedSessionController extends Controller
             default:
             return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);
         }
+    } catch (\Exception $e) {
+        // Log the exception for further investigation
+        Log::error('Error during authentication: ' . $e->getMessage());
+
+        // Return a generic error response
+        return response()->json(['message' => 'Error during authentication'], 500);
+    }
     }
 
     /**
