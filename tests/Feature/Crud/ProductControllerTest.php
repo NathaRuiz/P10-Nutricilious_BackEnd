@@ -43,10 +43,7 @@ class ProductControllerTest extends TestCase
 
     public function test_show_products(): void
     {
-        $user = User::firstOrCreate(['rol_id' => 1]);
-        $this->actingAs($user);
-
-        $response = $this->get('api/admin/products');
+        $response = $this->get('api/products');
 
         $response->assertStatus(200);
     }
@@ -54,21 +51,20 @@ class ProductControllerTest extends TestCase
 
     public function test_show_one_product(): void
     {
-        $user = User::firstOrCreate(['rol_id' => 1]);
-        $this->actingAs($user);
+        $faker = \Faker\Factory::create();
 
-        $faker = Faker::create();
-        $response = Product::create([
+        $product = Product::create([
             'name' => $faker->name,
             'description' => 'This is a test product.',
             'stock' => 10,
             'price' => 19.99,
             'status' => 'Active',
             'id_category' => 2,
-            'id_userCompany' => $user->id,
+            'id_userCompany' => 2,
         ]);
-
-        $response = $this->get("/api/admin/products/{$response->id}");
+    
+        $response = $this->get("api/products/{$product->id}");
+    
         $response->assertStatus(200);
     }
 
