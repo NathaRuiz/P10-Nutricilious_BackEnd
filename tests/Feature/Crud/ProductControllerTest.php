@@ -41,8 +41,12 @@ class ProductControllerTest extends TestCase
 
     public function test_show_products(): void
     {
-        $response = $this->get('api/products');
+        $companyUser = User::factory()->create(['rol_id' => 3]);
 
+        $this->actingAs($companyUser);
+
+        $response = $this->get('api/company/products');
+        
         $response->assertStatus(200);
     }
 
@@ -60,9 +64,9 @@ class ProductControllerTest extends TestCase
             'id_category' => 2,
             'id_userCompany' => 2,
         ]);
-    
+
         $response = $this->get("api/products/{$product->id}");
-    
+
         $response->assertStatus(200);
     }
 
