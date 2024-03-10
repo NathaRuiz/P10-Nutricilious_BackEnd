@@ -38,11 +38,10 @@ class AuthenticatedSessionController extends Controller
             return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);
         }
     } catch (\Exception $e) {
-        // Log the exception for further investigation
-        Log::error('Error during authentication: ' . $e->getMessage());
+        Log::error('Error durante el inicio de sesión: ' . $e->getMessage());
 
-        // Return a generic error response
-        return response()->json(['message' => 'Error during authentication'], 500);
+        // Puedes regresar una respuesta más específica para indicar un error de inicio de sesión
+        return response()->json(['message' => 'Correo electrónico o contraseña incorrectos. Por favor, verifica tus credenciales.'], 401);
     }
     }
 
