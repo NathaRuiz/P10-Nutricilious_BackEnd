@@ -13,12 +13,13 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::create(['name' => 'Alimentos veganos y saludables']);
-        Category::create(['name' => 'Proteínas vegetales']);
+        Category::create(['name' => 'Alimentos veganos']);
+        Category::create(['name' => 'Proteína vegetale']);
+        Category::create(['name' => 'Proteína animal']);
         Category::create(['name' => 'Granos y cereales']);
+        Category::create(['name' => 'Lácteos']);
         Category::create(['name' => 'Snacks saludables']);
         Category::create(['name' => 'Frutas y verduras']);
-        Category::create(['name' => 'Proteína animal']);
         Category::create(['name' => 'Aceites y condimentos saludables']);
     }
 }

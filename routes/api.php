@@ -26,7 +26,7 @@ Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
 
-Route::get('/categories', [AdminProductsController::class, 'showCategories']);
+Route::get('/', [AdminProductsController::class, 'showCategories']);
 Route::get('/products', [AdminProductsController::class, 'index']);
 Route::get('/products/{id}', [AdminProductsController::class, 'show']);
 
@@ -53,4 +53,3 @@ Route::middleware(['auth:sanctum', 'Company'])->group(function () {
     Route::put('/company/products/update/{id}', [CompanyProductsController::class, 'update']);
     Route::delete('/company/products/delete/{id}', [CompanyProductsController::class, 'destroy']);
 });
-
