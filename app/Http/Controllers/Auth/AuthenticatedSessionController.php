@@ -26,13 +26,13 @@ class AuthenticatedSessionController extends Controller
 
         switch ($user->rol->name) {
             case 'Admin':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso como administrador']);
+                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Admin']);
                 break;
             case 'User':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso como usuario']);
+                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'User']);
                 break;
             case 'Company':
-                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso como empresa']);
+                return response()->json(['token' => $token, 'message' => 'Inicio de sesión exitoso', 'rol' => 'Company']);
                 break;
             default:
             return response()->json(['message' => 'Rol no reconocido: ' . $user->rol->name], 403);

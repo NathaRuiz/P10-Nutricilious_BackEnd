@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -25,6 +27,18 @@ class AdminProductsController extends Controller
         return response()->json($product);
     }
 
+    public function showCategories()
+    {
+        $categories = Category::all();
+        return response()->json($categories);
+    }
+
+    public function showCompanies()
+    {
+        $companies = User::where('rol_id', 3)->get();
+        return response()->json(['companies' => $companies]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -35,7 +49,7 @@ class AdminProductsController extends Controller
             'status' => 'required|in:Active,Inactive',
             'id_category' => 'required|exists:categories,id',
         ]);
-        
+
 
         $product = Product::create($request->all());
 
