@@ -13,10 +13,8 @@ class ProductControllerTest extends TestCase
 {
     public function test_products_table_is_created()
     {
-        // Ejecuta la migración
         $this->artisan('migrate');
 
-        // Asegura que la tabla 'resources' exista en la base de datos
         $this->assertTrue(Schema::hasTable('products'));
     }
 
