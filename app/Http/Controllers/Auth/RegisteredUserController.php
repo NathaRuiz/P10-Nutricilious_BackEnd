@@ -42,10 +42,8 @@ class RegisteredUserController extends Controller
     
         event(new Registered($user));
 
-        // Autenticar al usuario recién registrado
         Auth::login($user);
     
-        // Crea un token de acceso para el usuario recién registrado
         $token = $user->createToken('api-token')->plainTextToken;
         
     
