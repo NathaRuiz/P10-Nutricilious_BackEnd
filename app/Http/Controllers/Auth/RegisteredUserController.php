@@ -26,7 +26,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'adress' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:255'],
-            'rol_id' => ['required', 'exists:rols,id'], // Asegura que el rol_id existe en la tabla roles
+            'rol_id' => ['required', 'exists:rols,id'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
     
